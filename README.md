@@ -36,6 +36,7 @@ working, including getting the Director running.
 
 1. Refer to _Step 1: Prepare an Environment_, [here](https://docs.pivotal.io/partners/deploying-with-bosh.html), and perform 1 through 6, but *change* _ExampleKeyPair_ to _bosh_ throughout, since a later phase will assume the existence of a key pair called _bosh_.
 1. At this point, you will want to check your security group to ensure you have it configured per the figure below.  I arrived here through trail and error.
+
 ![Security Group Details](./BOSH_GPDB_Security_Group_Settings_Worked.png)
 
 
