@@ -37,5 +37,7 @@ working, including getting the Director running.
 1. Refer to _Step 1: Prepare an Environment_, [here](https://docs.pivotal.io/partners/deploying-with-bosh.html), and perform 1 through 6, but *change* _ExampleKeyPair_ to _bosh_ throughout, since a later phase will assume the existence of a key pair called _bosh_.
 1. At this point, you will want to check your security group to ensure you have it configured per the figure below.  `sg-00cb477b` is the security group resulting from the actions carried out above.
 ![Security Group Details](./BOSH_GPDB_Security_Group_Settings_Worked.png)
-1. more ...
+1. I also found it useful to go into the _VPC Dashboard_ and modify the subnet for my VPC so that it would automatically assign a public IP to any VM deployed there (see below).
+![Auto assign public IP](./VPC_Dashboard_Auto_Assign_Public_IP.png)
+
 
