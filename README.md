@@ -39,5 +39,9 @@ working, including getting the Director running.
 ![Security Group Details](./BOSH_GPDB_Security_Group_Settings_Worked.png)
 1. I also found it useful to go into the _VPC Dashboard_ and modify the subnet for my VPC so that it would automatically assign a public IP to any VM deployed there (see below).
 ![Auto assign public IP](./VPC_Dashboard_Auto_Assign_Public_IP.png)
+1. The next part is to launch an Ubuntu Trusty VM.  I did this using the _Vagrant bosh-lite_ setup, but the result was I had the AMI _ami-ffa94192_ running on an _m3.xlarge_ VM, in the subnet created earlier.  For now, I will omit the details on this, but can add them later if this is useful.  I used the same key pair, _bosh_, for this VM.
+1. SSH into this VM: `ssh -i ./bosh.pem ubuntu@52.91.102.63` (replacing _52.91.102.63_ with your public IP)
+
+## The Following Steps Were Run from the VM, via the SSH Connection
 
 
