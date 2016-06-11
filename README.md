@@ -14,4 +14,8 @@ working, including getting the Director running.
 1. The _IaaS Account & Consolidated Bill Request_ form (NEED LINK) got me started with an AWS account
 2. The [GPDB BOSH release code](https://s3.amazonaws.com/bds-ci/gpdb-bosh-release/greenplum-0.11.4-artifacts.tgz)
 3. The _README.md_ contained within the above archive
-4. 
+4. The [bosh.yml](./bosh.yml) I used to deploy the BOSH Director
+5. A [diff](./mods_greenplum-0.11.4.txt) showing the mods I made within the greenplum-0.11.4-artifacts.tgz material
+6. A [dump](./bash_history_bosh_cli_node.txt) of Bash history from the Ubuntu Trusty node I deployed into EC2 and ran all of this on
+
+

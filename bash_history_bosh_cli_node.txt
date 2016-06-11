@@ -1,0 +1,67 @@
+   29  sudo gem install bosh_cli
+   30  bosh
+   33  curl -O https://s3.amazonaws.com/bosh-init-artifacts/bosh-init-0.0.92-linux-amd64
+   35  chmod +x ./bosh-init-0.0.92-linux-amd64 
+   37  ln -s ./bosh-init-0.0.92-linux-amd64 ./bosh-init
+   38  ./bosh-init deploy ./bosh.yml 
+   43  vim bosh.yml 
+   44  ./bosh-init deploy ./bosh.yml 
+   45  ./bosh-init delete ./bosh.yml 
+   46  ./bosh-init deploy ./bosh.yml 
+   47  ping 52.0.195.60
+   56  vim bosh.yml 
+   57  ./bosh-init delete ./bosh.yml 
+   66  vim bosh.yml 
+   67  ./bosh-init delete ./bosh.yml 
+   68  ./bosh-init deploy ./bosh.yml 
+   76  curl -O https://s3.amazonaws.com/bds-ci/gpdb-bosh-release/greenplum-0.11.4-artifacts.tgz
+   78  tar xzvf greenplum-0.11.4-artifacts.tgz 
+   79  cd greenplum-0.11.4/
+   84  cat greenplum-0.11.4-stemcell.txt 
+   85  find . -name cloud-config.yml
+   87  cd manifests/
+   89  vim greenplum-0.11.4.cloud-config.yml 
+   91  grep -i key *
+   92  ll
+   93  vim greenplum-0.11.4.production-multi-node.yml 
+   94  openssl genrsa 1024 2>/dev/null > private-key.txt
+  106  ls /home/ubuntu/greenplum-0.11.4/manifests/private_key.txt 
+  110  chmod 0400 private_key.txt 
+  113  bosh target 192.168.1.6
+  114  bosh releases
+  116  cd ..
+  118  bosh upload release ./greenplum-0.11.4.tgz 
+  119  bosh update cloud-config ./manifests/greenplum-0.11.4.cloud-config.yml 
+  122  bosh upload stemcell https://bosh.io/d/stemcells/bosh-aws-xen-hvm-centos-7-go_agent
+  123  grep '3232.3' manifests/*
+  127  vim manifests/greenplum-0.11.4.cheap-multi-node.yml 
+  130  bosh releases
+  137  bosh deployment ./manifests/greenplum-0.11.4.cheap-multi-node.yml 
+  138  bosh deploy
+  139  bosh update cloud-config ./manifests/greenplum-0.11.4.cloud-config.yml 
+  140  bosh deploy
+  143  bosh stemcells
+  144  grep 3232 manifests/greenplum-0.11.4.cheap-multi-node.yml 
+  145  vim manifests/greenplum-0.11.4.cheap-multi-node.yml 
+  146  bosh deployment ./manifests/greenplum-0.11.4.cheap-multi-node.yml 
+  147  bosh deploy
+  148  grep '0.06' manifests/*
+  149  vim manifests/greenplum-0.11.4.cloud-config.yml 
+  150  bosh update cloud-config ./manifests/greenplum-0.11.4.cloud-config.yml 
+  151  bosh deploy
+  154  vim ssh_into_gpdb.sh
+  156  cd manifests/
+  158  cd ..
+  159  vim ssh_into_gpdb.sh
+  161  chmod +x ./ssh_into_gpdb.sh 
+  162  ./ssh_into_gpdb.sh 
+  164  ( cd ~/ && ls $PWD/bosh.pem )
+  165  vim ./ssh_into_gpdb.sh 
+  166  ./ssh_into_gpdb.sh 
+  170  cd manifests/
+  184  bosh delete deployment greenplum-cheap-multi-node
+  205  time bosh delete deployment greenplum-cheap-multi-node
+  206  time bosh deploy
+  207  ./ssh_into_gpdb.sh 
+  209  bosh deployments
+  210  time bosh delete deployment greenplum-cheap-multi-node

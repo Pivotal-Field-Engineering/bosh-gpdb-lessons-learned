@@ -1,0 +1,90 @@
+diff -Naur /tmp/greenplum-0.11.4/manifests/greenplum-0.11.4.cheap-multi-node.yml ./greenplum-0.11.4/manifests/greenplum-0.11.4.cheap-multi-node.yml
+--- /tmp/greenplum-0.11.4/manifests/greenplum-0.11.4.cheap-multi-node.yml	2016-06-06 15:40:09.000000000 +0000
++++ ./greenplum-0.11.4/manifests/greenplum-0.11.4.cheap-multi-node.yml	2016-06-08 09:16:32.709569914 +0000
+@@ -1,10 +1,10 @@
+ <%
+-  private_key = File.read('replaceme') # replace replaceme with path to private key file
++  private_key = File.read('/home/ubuntu/greenplum-0.11.4/manifests/private_key.txt') # replace replaceme with path to private key file
+ 
+   deployment_name = 'greenplum-cheap-multi-node'
+   director_name = `bosh status | grep Name | xargs | cut -f2 -d' ' | xargs`
+   director_uuid = `bosh status --uuid`
+-  subnet_cidr = "replaceme" # used in pg_hba.conf
++  subnet_cidr = "192.168.1.0/24" # used in pg_hba.conf
+ 
+ # start performance-checks errand variables sections
+   performance_threshold = 50  # MB/s that the minimum network and drive test has to exceed in order to pass
+@@ -43,7 +43,7 @@
+ stemcells:
+   - alias: default
+     os: centos-7
+-    version: 3232.3
++    version: 3232.6
+ 
+ update:
+   canaries: 2
+@@ -67,7 +67,7 @@
+ 
+   - name: master
+     instances: 1
+-    vm_type: greenplum-c3.xlarge-spot
++    vm_type: greenplum-c3.xlarge
+     stemcell: default
+     networks: [{ name: private }]
+ 
+@@ -101,7 +101,7 @@
+ 
+   - name: segment
+     instances: 8
+-    vm_type: greenplum-c3.xlarge-spot
++    vm_type: greenplum-c3.xlarge
+     stemcell: default
+     networks: [{ name: private }]
+ 
+diff -Naur /tmp/greenplum-0.11.4/manifests/greenplum-0.11.4.cloud-config.yml ./greenplum-0.11.4/manifests/greenplum-0.11.4.cloud-config.yml
+--- /tmp/greenplum-0.11.4/manifests/greenplum-0.11.4.cloud-config.yml	2016-06-06 15:40:09.000000000 +0000
++++ ./greenplum-0.11.4/manifests/greenplum-0.11.4.cloud-config.yml	2016-06-08 01:46:10.200726172 +0000
+@@ -1,10 +1,10 @@
+ <%
+-  subnet_id = 'replaceme'
+-  az = 'replaceme'
+-  cidr = 'replaceme'          # e.g 10.0.60.0/24
+-  gateway = 'replaceme'       # e.g 10.0.60.1
+-  reserved_ips = 'replaceme'  # e.g '10.0.60.2-10.0.60.10' BOSH will not deploy in this IP range
+-  spot_price = 'replaceme'    # e.g '0.06' for c3.xlarge
++  subnet_id = 'subnet-05b19838'
++  az = 'us-east-1e'
++  cidr = '192.168.1.0/24'          # e.g 10.0.60.0/24
++  gateway = '192.168.1.1'       # e.g 10.0.60.1
++  reserved_ips = '192.168.1.1-192.168.1.16'  # e.g '10.0.60.2-10.0.60.10' BOSH will not deploy in this IP range
++  spot_price = '0.07'    # 0.0665 e.g '0.06' for c3.xlarge
+ %>
+ ---
+ vm_types:
+diff -Naur /tmp/greenplum-0.11.4/manifests/private_key.txt ./greenplum-0.11.4/manifests/private_key.txt
+--- /tmp/greenplum-0.11.4/manifests/private_key.txt	1970-01-01 00:00:00.000000000 +0000
++++ ./greenplum-0.11.4/manifests/private_key.txt	2016-06-08 01:05:56.235829899 +0000
+@@ -0,0 +1,15 @@
++-----BEGIN RSA PRIVATE KEY-----
++WbXWvAprpbgu1IEUHnLIRihmic/Pt/1W9QY6WGXo2rewMLtQ4RY5anjPD9RMTIr1
++U/KfipIIgricJeCr9ZsbWu+xay/Uz/rGx/ASMNgEPu3hHM4hU7k+y0/LjlbJvPq3
++QnyrUb3f7VfbKr6umpUB3jE3Yn4wGD7/pIllpRbeFWErCTwcVohJxzExJEtX99wQ
++K6oIN7Oe7YAciatiV4Ub9zJzcH6DONj/VqWgb15vZztVhckqkOgcSXNkxkHcSHgQ
++2Rp0si4YzUJbIdhaYU73leaSaJC/UOJHMevqFbwSvN2L8FUFhSPOv/legZJyfC9R
++QLm4Ds/V/ag9mK1fzzFsY8ukKTFqvcShO3sBgBLf92yrqk1zIMozR5m2MWcnHxYy
++QN3OVjd9aKmfq61ooypg4YQ+AmaFXajwtScVwEoVrtdh2dysDvmThLIL+9mXkANH
++KwivBfrO+WMaVELZqct0GfHQs8th9ZESABEdzsj2dgYubbdOSp3PGLKfPfLBwauo
++cKOcdfHqKG4kAp3N+yl63UjSnurdAMra2mk71FVZ6Q17u45fohB/y/gr1c59jbtE
++rtwgci93DQEyT3IKjObSYXjXfwImvAa3FMRYLsDRyHVjN3goIozuCEPjJlaOXHz3
++Qp6bJpLYGQG64Io+iy6sfaynqeclq/xAK4cgVsqfbSy0edrxz7h8z1CNXwcS07Ry
++O+xC/IcdF7/lEPoT86UBMH3s5txJ9jtaxZzPheRufWC+KA2bpDbCzG1eYXbvMSxm
++hZOPMQ+DnAAWzPHgCT3vZCfR5wa/tr5RW8bXBrVLNVfRh==
++-----END RSA PRIVATE KEY-----
+diff -Naur /tmp/greenplum-0.11.4/ssh_into_gpdb.sh ./greenplum-0.11.4/ssh_into_gpdb.sh
+--- /tmp/greenplum-0.11.4/ssh_into_gpdb.sh	1970-01-01 00:00:00.000000000 +0000
++++ ./greenplum-0.11.4/ssh_into_gpdb.sh	2016-06-08 02:15:51.188698093 +0000
+@@ -0,0 +1,4 @@
++#!/bin/bash
++
++bosh ssh --gateway_user=vcap --gateway_host 192.168.1.6 --default_password admin --gateway_identity_file /home/ubuntu/bosh.pem
++
