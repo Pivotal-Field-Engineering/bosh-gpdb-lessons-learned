@@ -40,8 +40,28 @@ working, including getting the Director running.
 1. I also found it useful to go into the _VPC Dashboard_ and modify the subnet for my VPC so that it would automatically assign a public IP to any VM deployed there (see below).
 ![Auto assign public IP](./VPC_Dashboard_Auto_Assign_Public_IP.png)
 1. The next part is to launch an Ubuntu Trusty VM.  I did this using the _Vagrant bosh-lite_ setup, but the result was I had the AMI _ami-ffa94192_ running on an _m3.xlarge_ VM, in the subnet created earlier.  For now, I will omit the details on this, but can add them later if this is useful.  I used the same key pair, _bosh_, for this VM.
-1. SSH into this VM: `ssh -i ./bosh.pem ubuntu@52.91.102.63` (replacing _52.91.102.63_ with your public IP)
+1. SSH into this VM: `ssh -i ./bosh.pem ubuntu@52.91.102.63` (replace _52.91.102.63_ with your public IP)
 
 ## The Following Steps Were Run from the VM, via the SSH Connection
+1. Refer to my [Bash history](./bash_history_bosh_cli_node.txt) if you need clarification
+1. Install _bosh-init_:
+
+    ```bash
+    curl -O https://s3.amazonaws.com/bosh-init-artifacts/bosh-init-0.0.92-linux-amd64
+    chmod +x ./bosh-init-0.0.92-linux-amd64
+    ln -s ./bosh-init-0.0.92-linux-amd64 ./bosh-init
+    ```
+
+1. Edit the [BOSH deployment manifest](./bosh.yml) to suit your environment.  Look for `<--- Replace`
+1. Deploy the BOSH Director: `./bosh-init deploy ./bosh.yml`
+1. Install BOSH CLI: `sudo gem install bosh_cli`
+1. Target this BOSH Director: `bosh target 192.168.1.6`.  Then you are prompted to enter a user name and password, use `admin` for each of them.
+1. Download, extract GPDB BOSH release: `curl https://s3.amazonaws.com/bds-ci/gpdb-bosh-release/greenplum-0.11.4-artifacts.tgz | tar xzvf -`
+1. Change into the new directory: `cd greenplum-0.11.4/`
+1. Refer to the _README.md_ there, starting with step 2 (though, you already performed step 5).  You may find it useful to also refer to [the diff showing my mods](./mods_greenplum-0.11.4.txt) and that [Bash history](./bash_history_bosh_cli_node.txt).
+
+## Caveats
+* I have tried to avoid duplicating all the steps outlined within references cited here, but it could be that having a single, concise (and correct, though I am not the authority) reference, is simpler than one containing multiple links to external resources.
+* It has been a few days since I walked through all of this, so I need to attempt it again, following these steps, and update this document to correct any inaccuracies or omissions.
 
 

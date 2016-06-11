@@ -48,7 +48,7 @@ jobs:
   - {name: health_monitor, release: bosh}
   - {name: registry, release: bosh}
   - {name: aws_cpi, release: bosh-aws-cpi}
-  - {name: powerdns, release: bosh}      # this adds the powerdns to your bosh director
+  - {name: powerdns, release: bosh}      # This adds Power DNS to your bosh director
 
   resource_pool: vms
   persistent_disk_pool: disks
@@ -67,7 +67,7 @@ jobs:
       password: nats-password
 
     dns:
-      address: 192.168.1.6   # DNS server address. adjust the IP accordingly to match your subnet
+      address: 192.168.1.6   # <--- Replace: DNS server address, which by convention is the ".6" host on your subnet
       db: {host: 127.0.0.1, user: postgres, password: postgres-password}
 
     postgres: &db
@@ -109,10 +109,10 @@ jobs:
       access_key_id: E1QM65U3UL6Z62Q8LBT # <--- Replace with AWS Access Key ID
       secret_access_key: Uh5LbVjvZnjkRnN3syz8fFSs6VuLXlheYsG4Kwg # <--- Replace with AWS Secret Key
       default_key_name: bosh # <--- Must correlate with the private_key value, below
-      default_security_groups: [sg-00cb477b] # <--- Replace with security group name (but, I used the ID here)
+      default_security_groups: [sg-00cb477b] # <--- Replace with security group ID
       region: us-east-1 # <--- Replace with your region
 
-    agent: {mbus: "nats://nats:nats-password@192.168.1.6:4222"}
+    agent: {mbus: "nats://nats:nats-password@192.168.1.6:4222"} # Embed this IP:PORT below
 
     ntp: &ntp [0.pool.ntp.org, 1.pool.ntp.org]
 
@@ -125,8 +125,7 @@ cloud_provider:
     user: vcap
     private_key: ./bosh.pem # <--- Path to key must be relative to this manifest file
  
-  # <--- Replace with Elastic IP address, retaining “:6868” port number
-  mbus: "https://mbus:mbus-password@192.168.1.6:6868" # <--- NOTE: here, I found I had to use the *private* IP
+  mbus: "https://mbus:mbus-password@192.168.1.6:6868" # Just using IP:PORT from above ("Embed this IP:PORT below")
 
   properties:
     aws: *aws
