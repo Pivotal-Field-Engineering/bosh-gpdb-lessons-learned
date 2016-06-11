@@ -1,0 +1,135 @@
+---
+name: bosh
+
+releases:
+- name: bosh
+  url: https://bosh.io/d/github.com/cloudfoundry/bosh?v=256.2
+  sha1: ff2f4e16e02f66b31c595196052a809100cfd5a8
+- name: bosh-aws-cpi
+  url: https://bosh.io/d/github.com/cloudfoundry-incubator/bosh-aws-cpi-release?v=53
+  sha1: 3a5988bd2b6e951995fe030c75b07c5b922e2d59
+
+resource_pools:
+- name: vms
+  network: private
+  stemcell:
+    url: https://bosh.io/d/stemcells/bosh-aws-xen-hvm-ubuntu-trusty-go_agent?v=3232.4
+    sha1: ac920cae17c7159dee3bf1ebac727ce2d01564e9
+  cloud_properties:
+    instance_type: m3.xlarge
+    ephemeral_disk: {size: 25_000, type: gp2}
+    availability_zone: us-east-1e # <--- Replace with Availability Zone
+
+disk_pools:
+- name: disks
+  disk_size: 20_000
+  cloud_properties: {type: gp2}
+
+networks:
+- name: private
+  type: manual
+  subnets:
+  - range: 192.168.1.0/24
+    gateway: 192.168.1.1
+    dns: [8.8.8.8]
+    cloud_properties: {subnet: subnet-05b19838 } # <--- Replace with example Subnet ID
+- name: public
+  type: vip
+
+jobs:
+- name: bosh
+  instances: 1
+
+  templates:
+  - {name: nats, release: bosh}
+  - {name: postgres, release: bosh}
+  - {name: blobstore, release: bosh}
+  - {name: director, release: bosh}
+  - {name: health_monitor, release: bosh}
+  - {name: registry, release: bosh}
+  - {name: aws_cpi, release: bosh-aws-cpi}
+  - {name: powerdns, release: bosh}      # this adds the powerdns to your bosh director
+
+  resource_pool: vms
+  persistent_disk_pool: disks
+
+  networks:
+  - name: private
+    static_ips: [192.168.1.6]
+    default: [dns, gateway]
+  - name: public
+    static_ips: [52.0.195.60] # <--- Replace with public Elastic IP address, from "aws ec2 allocate-address"
+
+  properties:
+    nats:
+      address: 127.0.0.1
+      user: nats
+      password: nats-password
+
+    dns:
+      address: 192.168.1.6   # DNS server address. adjust the IP accordingly to match your subnet
+      db: {host: 127.0.0.1, user: postgres, password: postgres-password}
+
+    postgres: &db
+      host: 127.0.0.1
+      user: postgres
+      password: postgres-password
+      database: bosh
+      adapter: postgres
+
+    registry:
+      address: 192.168.1.6
+      host: 192.168.1.6
+      db: *db
+      http: {user: admin, password: admin, port: 25777}
+      username: admin
+      password: admin
+      port: 25777
+
+    blobstore:
+      address: 192.168.1.6
+      port: 25250
+      provider: dav
+      director: {user: director, password: director-password}
+      agent: {user: agent, password: agent-password}
+
+    director:
+      address: 127.0.0.1
+      name: my-bosh
+      db: *db
+      cpi_job: aws_cpi
+      max_threads: 10
+      enable_post_deploy: true
+
+    hm:
+      director_account: {user: admin, password: admin}
+      resurrector_enabled: true
+
+    aws: &aws
+      access_key_id: E1QM65U3UL6Z62Q8LBT # <--- Replace with AWS Access Key ID
+      secret_access_key: Uh5LbVjvZnjkRnN3syz8fFSs6VuLXlheYsG4Kwg # <--- Replace with AWS Secret Key
+      default_key_name: bosh # <--- Must correlate with the private_key value, below
+      default_security_groups: [sg-00cb477b] # <--- Replace with security group name (but, I used the ID here)
+      region: us-east-1 # <--- Replace with your region
+
+    agent: {mbus: "nats://nats:nats-password@192.168.1.6:4222"}
+
+    ntp: &ntp [0.pool.ntp.org, 1.pool.ntp.org]
+
+cloud_provider:
+  template: {name: aws_cpi, release: bosh-aws-cpi}
+
+  ssh_tunnel:
+    host: 52.0.195.60 # <--- Replace with Elastic IP address, same as above
+    port: 22
+    user: vcap
+    private_key: ./bosh.pem # <--- Path to key must be relative to this manifest file
+ 
+  # <--- Replace with Elastic IP address, retaining “:6868” port number
+  mbus: "https://mbus:mbus-password@192.168.1.6:6868" # <--- NOTE: here, I found I had to use the *private* IP
+
+  properties:
+    aws: *aws
+    agent: {mbus: "https://mbus:mbus-password@0.0.0.0:6868"}
+    blobstore: {provider: local, path: /var/vcap/micro_bosh/data/cache}
+    ntp: *ntp
