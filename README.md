@@ -25,11 +25,13 @@ working, including getting the Director running.
 ## These Steps Were Run from a Mac Laptop
 1. Install AWS CLI tools: `pip install awscli`
 1. Configure this CLI, based on details of your AWS account (just hit ENTER to preserve existing values):
+    ```bash
     [airmike:example-tile-docs-resources]$ aws configure
     AWS Access Key ID [****************ZDDA]:
     AWS Secret Access Key [****************ciqx]:
     Default region name [us-east]: us-east-1
     Default output format [json]:
+    ```
 1. At this point, you need to create a _key pair_.  To avoid an issue I encountered due to use of one called _ExampleKeyPair_, I recommend following [this procedure](http://bosh.io/docs/init-aws.html#create-key-pair), which results in a key pair called _bosh_.
 
 
