@@ -5,17 +5,31 @@ working, including getting the Director running.
 
 ## Quick Overview
 - It was not easy or intuitive for me
+- Each time I attempted `bosh-init deploy ./bosh.yml`, it failed with the same error: `Post https://mbus:mbus-password@52.204.81.118:6868/agent: dial tcp 52.204.81.118:6868: i/o timeout`
 - It did, eventually, work, and I was able to use this in a demo in Reston, VA on June 9, 2016
 - The above would not have been possible without the helpful assistance of Todd Ritchie, via
   the #big-data-services Slack channel
-- I am a huge fan, believe in the cloud agnosticism BOSH can provide
+- It is not possible to deploy GPDB using _BOSH lite_ due to its lack of support for _Power DNS_
+- I am a huge fan of the differentiating power of cloud agnosticism, which BOSH provides
 
 ## Resources
 1. The _IaaS Account & Consolidated Bill Request_ form (NEED LINK) got me started with an AWS account
 2. The [GPDB BOSH release code](https://s3.amazonaws.com/bds-ci/gpdb-bosh-release/greenplum-0.11.4-artifacts.tgz)
 3. The _README.md_ contained within the above archive
-4. The [bosh.yml](./bosh.yml) I used to deploy the BOSH Director
-5. A [diff](./mods_greenplum-0.11.4.txt) showing the mods I made within the greenplum-0.11.4-artifacts.tgz material
-6. A [dump](./bash_history_bosh_cli_node.txt) of Bash history from the Ubuntu Trusty node I deployed into EC2 and ran all of this on
+4. [Deploying ... with BOSH](https://docs.pivotal.io/partners/deploying-with-bosh.html): this link appears within the README.md
+5. [Initializing BOSH environment on AWS](http://bosh.io/docs/init-aws.html), which is linked from item 4
+6. The [bosh.yml](./bosh.yml) I used to deploy the BOSH Director
+7. A [diff](./mods_greenplum-0.11.4.txt) showing the mods I made within the greenplum-0.11.4-artifacts.tgz material
+8. A [dump](./bash_history_bosh_cli_node.txt) of Bash history from the Ubuntu Trusty node I deployed into EC2 and ran all of this on
+
+## These Steps Were Run from a Mac Laptop
+1. Install AWS CLI tools: `pip install awscli`
+1. Configure this CLI, based on details of your AWS account (just hit ENTER to preserve existing values):
+    [airmike:example-tile-docs-resources]$ aws configure
+    AWS Access Key ID [****************ZDDA]:
+    AWS Secret Access Key [****************ciqx]:
+    Default region name [us-east]: us-east-1
+    Default output format [json]:
+1. At this point, you need to create a _key pair_.  To avoid an issue I encountered due to use of one called _ExampleKeyPair_, I recommend following [this procedure](http://bosh.io/docs/init-aws.html#create-key-pair), which results in a key pair called _bosh_.
 
 
