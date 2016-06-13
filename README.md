@@ -13,7 +13,7 @@ working, including getting the Director running.
 - I am a huge fan of the differentiating power of cloud agnosticism, which BOSH provides
 
 ## Resources
-1. The _IaaS Account & Consolidated Bill Request_ form (NEED LINK) got me started with an AWS account
+1. The _IaaS Account & Consolidated Bill Request_ form got me started with an AWS account.  This is accessible via the [PA Wiki](https://sites.google.com/a/pivotal.io/pa-wiki/tools)
 2. The [GPDB BOSH release code](https://s3.amazonaws.com/bds-ci/gpdb-bosh-release/greenplum-0.11.4-artifacts.tgz)
 3. The _README.md_ contained within the above archive
 4. [Deploying ... with BOSH](https://docs.pivotal.io/partners/deploying-with-bosh.html): this link appears within the README.md
