@@ -1,4 +1,4 @@
-# bosh-gpdb-lessons-learned
+<h1> VMware has ended active development of this project, this repository will no longer be updated.</h1><br># bosh-gpdb-lessons-learned
 
 This is my attempt to preserve what I learned in my attempt to get the GPDB BOSH release
 working, including getting the Director running.
